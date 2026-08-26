@@ -51,7 +51,6 @@ target_sources(libs-cxxsupp-builtins PRIVATE
   ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/comparedf2.c
   ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/comparesf2.c
   ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/comparetf2.c
-  ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/cpu_model/x86.c
   ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/ctzdi2.c
   ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/ctzsi2.c
   ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/ctzti2.c
@@ -174,12 +173,6 @@ target_sources(libs-cxxsupp-builtins PRIVATE
   ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/umoddi3.c
   ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/umodsi3.c
   ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/umodti3.c
-  ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/x86_64/chkstk.S
-  ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/x86_64/floatdidf.c
-  ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/x86_64/floatdisf.c
-  ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/x86_64/floatundidf.S
-  ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/x86_64/floatundisf.S
-  ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/x86_64/floatundixf.S
 )
 
 
@@ -433,7 +426,6 @@ set_property(
 
 set_property(
   SOURCE
-  ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/cpu_model/x86.c
   APPEND
   PROPERTY
   COMPILE_OPTIONS
@@ -1417,7 +1409,6 @@ set_property(
 
 set_property(
   SOURCE
-  ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/x86_64/floatdidf.c
   APPEND
   PROPERTY
   COMPILE_OPTIONS
@@ -1425,7 +1416,6 @@ set_property(
 
 set_property(
   SOURCE
-  ${PROJECT_SOURCE_DIR}/contrib/libs/cxxsupp/builtins/x86_64/floatdisf.c
   APPEND
   PROPERTY
   COMPILE_OPTIONS

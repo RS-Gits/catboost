@@ -37,5 +37,5 @@ target_sources_custom(util-charset
   SRCS
   ${PROJECT_SOURCE_DIR}/util/charset/wide_sse41.cpp
   CUSTOM_FLAGS
-  -msse4.1
+  -DSSE41_STUB
 )

@@ -98,7 +98,9 @@ def mkpath(path: str, verbose: bool = False, dry_run: bool = False):
 
 
 def need_to_build_with_cuda_for_main_targets(platform_name: str) -> bool:
-    system, _ = platform_name.split('-')
+    system, arch = platform_name.split('-')
+    if system == 'windows' and arch == 'arm64':
+        return False  # CUDA is not supported on Windows ARM64
     return system in ['linux', 'windows']
 
 
@@ -106,10 +108,16 @@ def get_primary_platform_name() -> str:
     if sys.platform == 'darwin':
         return 'darwin-universal2'
     else:
-        return {
+        system_name = {
             'win32': 'windows',
             'linux': 'linux'
-        }[sys.platform] + '-x86_64'
+        }[sys.platform]
+        arch = platform.machine()
+        if arch == 'AMD64':
+            arch = 'x86_64'
+        elif arch == 'ARM64':
+            arch = 'arm64'
+        return system_name + '-' + arch
 
 def get_native_platform_name() -> str:
     system_name = 'windows' if sys.platform == 'win32' else sys.platform
@@ -226,6 +234,8 @@ def patch_sources(
 def get_python_plat_name(platform_name: str) -> str:
     system, arch = platform_name.split('-')
     if system == 'windows':
+        if arch == 'arm64':
+            return 'win_arm64'
         return 'win_amd64'
     elif system == 'darwin':
         return 'macosx_11_0_universal2'
@@ -306,7 +316,10 @@ def build_r_package(
 
     binary_dst_dir = os.path.join('catboost', 'inst', 'libs')
     if system == 'windows':
-        binary_dst_dir = os.path.join(binary_dst_dir, 'x64')
+        if platform_name == 'windows-arm64':
+            binary_dst_dir = os.path.join(binary_dst_dir, 'arm64')
+        else:
+            binary_dst_dir = os.path.join(binary_dst_dir, 'x64')
 
     if not dry_run:
         os.makedirs(binary_dst_dir, exist_ok=True)
@@ -885,7 +898,10 @@ def build_all(
         conan_host_profile=os.path.join(src_root_dir, 'ci', 'conan', 'profiles', 'manylinux2014.x86_64.profile')
     else:
         cmake_target_toolchain=None
-        conan_build_profile=None
+        if platform_name == 'windows-arm64':
+            conan_build_profile=os.path.join(src_root_dir, 'ci', 'conan', 'profiles', 'build.windows.x86_64.profile')
+        else:
+            conan_build_profile=None
         conan_host_profile=None
 
     build_all_for_one_platform(
