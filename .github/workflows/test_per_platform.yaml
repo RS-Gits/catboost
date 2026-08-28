@@ -60,11 +60,12 @@ jobs:
 
       # TODO: maybe test on other Java versions as well
 
-      - name: Setup JDK 11 for running tests
+      - name: Setup JDK for running tests
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '11'
+          distribution: ${{ inputs.os == 'windows' && inputs.machine == 'arm64' && 'zulu' || 'temurin' }}
+          java-version: ${{ inputs.os == 'windows' && inputs.machine == 'arm64' && '17' || '11' }}
+          architecture: ${{ inputs.os == 'windows' && inputs.machine == 'arm64' && 'aarch64' || 'x64' }}
           java-package: jdk
           cache: 'maven'
           cache-dependency-path: |
@@ -137,11 +138,21 @@ jobs:
           repository: ${{ inputs.artifacts_repository }}
           run-id: ${{ inputs.artifacts_run_id }}
 
-      - if: inputs.os == 'windows'
-        name: Download python package for Windows
+      - if: inputs.os == 'windows' && inputs.machine == 'x86_64'
+        name: Download python package for Windows x86_64
         uses: actions/download-artifact@v4
         with:
           name: catboost-python-package-dist-cp312-cp312-win_amd64-${{ inputs.artifacts_version }}
+          path: catboost_python_package_dist/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ inputs.artifacts_repository }}
+          run-id: ${{ inputs.artifacts_run_id }}
+
+      - if: inputs.os == 'windows' && inputs.machine == 'arm64'
+        name: Download python package for Windows ARM64
+        uses: actions/download-artifact@v4
+        with:
+          name: catboost-python-package-dist-cp312-cp312-win_arm64-${{ inputs.artifacts_version }}
           path: catboost_python_package_dist/
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ inputs.artifacts_repository }}

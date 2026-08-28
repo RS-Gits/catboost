@@ -56,7 +56,8 @@ if sys.platform == 'win32':
     CUDA_ROOT = 'C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.8'
 
     if IS_IN_GITHUB_ACTION:
-        JAVA_HOME = '/jdk-8'
+        # JDK 8 is not available for Windows ARM64; JDK 17 is used instead
+        JAVA_HOME = '/jdk-17' if platform.machine() == 'ARM64' else '/jdk-8'
     else:
         JAVA_HOME = '/Program Files/Eclipse Adoptium/jdk-8.0.362.9-hotspot/'
 else:
@@ -639,6 +640,9 @@ def build_python_packages(
 
 
     for py_ver in PYTHON_VERSIONS:
+        # Windows ARM64 doesn't have Python 3.9/3.10 builds available
+        if build_native_wrapper.platform_name == 'windows-arm64' and py_ver in [(3,9), (3,10)]:
+            continue
         relative_python_dev_paths = get_relative_python_dev_paths(py_ver)
         if build_native_wrapper.macos_universal_binaries:
             platform_names_for_python_dev_paths = ['darwin-x86_64', 'darwin-arm64']
